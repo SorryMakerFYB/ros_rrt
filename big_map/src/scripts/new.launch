@@ -1,0 +1,37 @@
+<launch>
+    <arg name="eta" value="1.0"/>
+
+    <env name="GAZEBO_RESOURCE_PATH" value="$(find armbot_nav)/meshes"/>
+
+    <param name="robot_description" textfile="$(find big_map)/urdf/fuckbot.urdf" />
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(find big_map)/rviz/config.rviz" /> 
+
+    
+
+    
+
+
+    <!-- 添加机器人状态发布节点 -->
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" />
+    <node pkg="joint_state_publisher" type="joint_state_publisher" name="joint_state_publisher" output="screen" />
+
+    <node name="map_pub" pkg="big_map" type="fuckmap.py" output="screen" respawn="false"/>
+
+
+    <node pkg="rrt_exploration" type="global_rrt_detector" name="global_detector" output="screen">
+        <param name="eta" value="$(arg eta)"/>
+        <param name="map_topic" value="/map"/>
+    </node>
+    <node pkg="rrt_exploration" type="local_rrt_detector" name="local_detector" output="screen">
+        <param name="eta" value="$(arg eta)"/>
+        <param name="map_topic" value="/map"/>
+        <param name="robot_frame" value="base_link"/>
+    </node>
+    
+    <!-- 运动控制节点并加载参数 -->
+    <node name="arbotix" pkg="arbotix_python" type="arbotix_driver" output="screen">
+     <rosparam file="$(find big_map)/config/arbotix.yaml" command="load" />
+     <param name="sim" value="true" />
+    </node>
+
+</launch>

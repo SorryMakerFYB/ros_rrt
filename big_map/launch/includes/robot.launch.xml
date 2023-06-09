@@ -1,0 +1,14 @@
+
+<launch>
+  <arg name="robot_name"/>
+  <arg name="init_pose"/>
+
+  <arg name="model" value="$(find big_map)/urdf/armbot.urdf.xacro"/>
+  <param name="robot_description"
+        command="$(find xacro)/xacro $(arg model) ns:=$(arg robot_name)"/>
+  <node pkg="gazebo_ros" type="spawn_model" name="spawn_$(arg robot_name)" 
+        args="$(arg init_pose) -unpause -urdf -param robot_description -model $(arg robot_name)" respawn="false">
+  </node>
+ 
+   
+</launch>

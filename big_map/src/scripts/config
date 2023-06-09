@@ -1,0 +1,8 @@
+resolution:100 meters
+
+radius=400 meters
+
+rviz显示多机
+
+move_base sentgoal(centroid)
+

@@ -1,0 +1,7 @@
+digraph G {
+"map" -> "base_link"[label=" Broadcaster: /dynamic_tf_pub_p\nAverage rate: 1000.198\nBuffer length: 5.039\nMost recent transform: 186.182\nOldest transform: 181.143\n"];
+edge [style=invis];
+ subgraph cluster_legend { style=bold; color=black; label ="view_frames Result";
+"Recorded at time: 186.186"[ shape=plaintext ] ;
+}->"map";
+}

@@ -1,0 +1,18 @@
+<launch>
+
+     <arg name="model" default="$(find big_map)/urdf/base.urdf.xacro"/>
+     <param name="/robot_description"
+        command="xacro $(arg model)"/>
+     <node pkg="gazebo_ros" type="spawn_model" name="fuckbot" 
+        args="-x 0.0 -y 0.5 -z 0.1 -unpause -urdf -param /robot_description -model $(arg robot_name)" respawn="false">
+     </node>
+    <!-- 启动 gazebo -->
+    <include file="$(find gazebo_ros)/launch/empty_world.launch" />
+
+    <!-- 在 gazebo 中显示机器人模型 -->
+    <node pkg="gazebo_ros" type="spawn_model" name="model" args="-urdf -model fuckbot -param robot_description"  />
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" ns="/armbot">
+    <param name="publish_frequency" type="double" value="30.0" />
+    
+  </node>
+</launch>

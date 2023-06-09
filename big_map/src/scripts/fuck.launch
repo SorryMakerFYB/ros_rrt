@@ -1,0 +1,22 @@
+<launch>
+
+    <!-- 将 Urdf 文件的内容加载到参数服务器 -->
+    
+    <!-- 启动 gazebo -->
+ 
+ 
+ 
+    <!-- 在 gazebo 中显示机器人模型 -->
+    <!-- 与rviz不同（4）：launch-->
+    <group ns="/robot_1">
+
+     
+    
+    
+    
+        <node name="joint_state_publisher" pkg="big_map" type="talker.py" /> 
+        <node name="joint_state_publisher1" pkg="big_map" type="listener.py" /> 
+    </group>
+
+    
+</launch>

@@ -1,0 +1,49 @@
+1.建立地图（增量更新）并 订阅Gazeobo/odom
+
+
+2.移殖rrt算法，（global detector）
+3.检测到的点给local planer（订阅odom位置和map）
+4.local planer 输出的cmd_vel 给gaezbo去运动。
+
+
+gazebo：车urdf模型 可以订阅cmd_vel 输出是 gazebo/odom
+
+地图维护：发布一个增量更新地图
+订阅odom获得pose
+根据odom更新地图
+发布
+
+global detector：订阅：/map 输出:way_points
+
+local detector:订阅/map /odom.pose 输出：way_points
+
+local planer: 订阅 /map /odom /way_points
+输出：cmd_vel给gazebo
+
+
+1.地图，到底发布在哪里：map_updates可不可以用，必须是occupancygrid格式。想到了，写一个node发布一个数组free[]，里面是校车的pose和附近的点然后mappub的node
+去访问每一个点，涂白，再发布。 完成了
+
+2.搞清楚urdf 怎么接受cmd_vel 加入odom组件 完成了
+
+3.自己写或者调包rrt
+都是狗皮，我自己写rrt然后直接手动过去
+
+
+1.找一个urdf文件，不需要多复杂 base_link就可以，不是xacro也可以。
+
+2.有一个控制器，发布odom消息，最好是gazebo插件，会发布odom话题。
+
+3.在rviz和gazebo中生成机器人。
+
+4.在namespace中注意命名，接入filter和assigner.
+
+
+
+1.xacro不能读取robot_decription：需要先创建一个ARG MODEL=“.URDF.XACRO”
+2.namespace 不能操作 gazebo插件发布的话题：需要把xacro里面gazebo插件的namesapce的那一项去掉，不然只能设置固定namespace了。
+
+
+
+
+3.只需要传入订阅的话题的ns就可以，发布的话题在namespace下会自己加上
