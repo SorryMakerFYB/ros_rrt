@@ -1,0 +1,8 @@
+<launch>
+   
+<node name="map" pkg="big_map" type="talker_test.py"/>
+<node name="canny" pkg="big_map" type="frontier_opencv_detector.py" output="screen" />
+<node pkg="rviz" type="rviz" name="rviz" />
+
+    
+</launch>

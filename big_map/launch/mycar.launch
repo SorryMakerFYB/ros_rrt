@@ -8,17 +8,17 @@
  
     <!-- 在 gazebo 中显示机器人模型 -->
     <!-- 与rviz不同（4）：launch-->
+    <node name="detector" pkg="rrt_exploration" type="frontier_opencv_detector.py" output="screen"/>
     <group ns="/robot_1">
 
     <include file="$(find big_map)/launch/includes/robot.launch.xml">
 		<arg name="robot_name" value="robot_1"/>
 		<arg name="init_pose" value="-x 0.0 -y 0.0 -z 0.0"/>
+        <arg name="color" value="red"/>
 	</include>
 
-    <node name="map_pub" pkg="big_map" type="map_pub.py" output="screen" respawn="false">
-    <param name="ns" value="robot_1" />
-    </node>
-    <node name="map_update" pkg="big_map" type="map_update.py" output="screen">
+    <node name="dynamic" pkg="big_map" type="dynamic.py" output="screen">
+	<param name="robot_name" value="robot_1"/>
     </node>
 
     <node name="map_odom" pkg="big_map" type="map_odom.py" output="screen" >
@@ -36,13 +36,20 @@
 		<arg name="namespace" value="robot_1"/>
 	</include> 
     
+    <node name="canny" pkg="big_map" type="frontier_opencv_detector.py" output="screen" >
+    <param name="map_topic" value="map"/>
+    <param name="color_r" value="255"/>
+    <param name="color_g" value="0"/>
+    <param name="color_b" value="0"/>
+    </node>
     </group>
 
     <group ns="/robot_2">
    
      <include file="$(find big_map)/launch/includes/robot.launch.xml">
 		<arg name="robot_name" value="robot_2"/>
-		<arg name="init_pose" value="-x 5.0 -y 0.0 -z 0.0"/>
+		<arg name="init_pose" value="-x 2.0 -y 2.0 -z 0.0"/>
+        <arg name="color" value="green"/>
 	</include>
     <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" >
     <param name="publish_frequency" type="double" value="30.0" />
@@ -50,23 +57,33 @@
     </node>
     <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" /> 
 
-    <node name="map_pub" pkg="big_map" type="map_pub.py" output="screen" respawn="false">
-    <param name="ns" value="robot_2" />
-    </node>
-    <node name="map_update" pkg="big_map" type="map_update.py" output="screen">
+    <node name="dynamic" pkg="big_map" type="dynamic.py" output="screen">
+	<param name="robot_name" value="robot_2"/>
     </node>
     
     <node name="map_odom" pkg="big_map" type="map_odom.py" output="screen" >
     <param name="frame_id" value="robot_2" />
     <param name="child_frame_id" value="robot_2" />
     </node>
+    <node name="canny" pkg="big_map" type="frontier_opencv_detector.py" output="screen" >
+    <param name="map_topic" value="map"/>
+    <param name="color_r" value="0"/>
+    <param name="color_g" value="255"/>
+    <param name="color_b" value="0"/>
+    </node>
+        <include file="$(find big_map)/launch/includes/move_base.launch">
+		<arg name="namespace" value="robot_2"/>
+	</include> 
+    
+    
     </group>
 
     <group ns="/robot_3">
 
      <include file="$(find big_map)/launch/includes/robot.launch.xml">
 		<arg name="robot_name" value="robot_3"/>
-		<arg name="init_pose" value="-x -5.0 -y 0.0 -z 0.0"/>
+		<arg name="init_pose" value="-x -2.0 -y -2.0 -z 0.0"/>
+        <arg name="color" value="blue"/>
 	</include>
     <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" >
     <param name="publish_frequency" type="double" value="30.0" />
@@ -74,21 +91,28 @@
     </node>
     <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" /> 
 
-    <node name="map_pub" pkg="big_map" type="map_pub.py" output="screen" respawn="false">
-    <param name="ns" value="robot_3" />
-    </node>
-    <node name="map_update" pkg="big_map" type="map_update.py" output="screen">
+    <node name="dynamic" pkg="big_map" type="dynamic.py" output="screen">
+	<param name="robot_name" value="robot_3"/>
     </node>
     
     <node name="map_odom" pkg="big_map" type="map_odom.py" output="screen" >
     <param name="frame_id" value="robot_3" />
     <param name="child_frame_id" value="robot_3" />
     </node>
+    <node name="canny" pkg="big_map" type="frontier_opencv_detector.py" output="screen" >
+    <param name="map_topic" value="map"/>
+    <param name="color_r" value="0"/>
+    <param name="color_g" value="0"/>
+    <param name="color_b" value="255"/>
+    </node>
+        <include file="$(find big_map)/launch/includes/move_base.launch">
+		<arg name="namespace" value="robot_3"/>
+	</include> 
+    
+    
     </group>
     
-    <node pkg="tf" type="static_transform_publisher" name="robot1" args="0 0 0 0 0 0 map /robot_1/map 20" />
-    <node pkg="tf" type="static_transform_publisher" name="robot2" args="0 0 0 0 0 0 map /robot_2/map 20" />
-    <node pkg="tf" type="static_transform_publisher" name="robot3" args="0 0 0 0 0 0 map /robot_3/map 20" />
+  
     
     
     <include file="$(find big_map)/launch/includes/initposes.launch"/>
